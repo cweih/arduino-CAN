@@ -260,19 +260,6 @@ int MCP2515Class::parsePacket()
 
 void MCP2515Class::onReceive(void(*callback)(int))
 {
-  CANControllerClass::onReceive(callback);
-
-  pinMode(_intPin, INPUT);
-
-  if (callback) {
-    SPI.usingInterrupt(digitalPinToInterrupt(_intPin));
-    attachInterrupt(digitalPinToInterrupt(_intPin), MCP2515Class::onInterrupt, LOW);
-  } else {
-    detachInterrupt(digitalPinToInterrupt(_intPin));
-#ifdef SPI_HAS_NOTUSINGINTERRUPT
-    SPI.notUsingInterrupt(digitalPinToInterrupt(_intPin));
-#endif
-  }
 }
 
 int MCP2515Class::filter(int id, int mask)
@@ -438,13 +425,6 @@ void MCP2515Class::reset()
 
 void MCP2515Class::handleInterrupt()
 {
-  if (readRegister(REG_CANINTF) == 0) {
-    return;
-  }
-
-  while (parsePacket()) {
-    _onReceive(available());
-  }
 }
 
 uint8_t MCP2515Class::readRegister(uint8_t address)
@@ -487,7 +467,6 @@ void MCP2515Class::writeRegister(uint8_t address, uint8_t value)
 
 void MCP2515Class::onInterrupt()
 {
-  CAN.handleInterrupt();
 }
 
 MCP2515Class CAN;

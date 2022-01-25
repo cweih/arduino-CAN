@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": "arduino_CAN",
+			"path": "exclude\\arduino_CAN"
+		}
+	]
+}
