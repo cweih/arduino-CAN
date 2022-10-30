@@ -79,7 +79,7 @@ int MCP2515Class::begin(long baudRate)
   SPI.begin();
 
   reset();
-
+  //Serial.println(_spiSettings._clock);
   writeRegister(REG_CANCTRL, 0x80);
   if (readRegister(REG_CANCTRL) != 0x80) {
     return 0;
@@ -256,6 +256,22 @@ int MCP2515Class::parsePacket()
   modifyRegister(REG_CANINTF, FLAG_RXnIF(n), 0x00);
 
   return _rxDlc;
+}
+
+uint8_t MCP2515Class::pollCANData(uint8_t *au8_receive_data, uint8_t u8_max_nof_elements)
+{
+  uint8_t i = 0;
+  if (readRegister(REG_CANINTF) == 0) {
+    return 0u;
+  }
+
+  parsePacket();
+
+  while (available() && (i < u8_max_nof_elements)) {
+    au8_receive_data[i] = read();
+    i++;
+  }
+  return i;
 }
 
 void MCP2515Class::onReceive(void(*callback)(int))
