@@ -40,7 +40,7 @@ public:
   virtual int filter(int id, int mask);
   using CANControllerClass::filterExtended;
   virtual int filterExtended(long id, long mask);
-  virtual uint8_t pollCANData(uint8_t *au8_receive_data, uint8_t u8_max_nof_elements);
+  virtual uint8_t pollCANData(uint8_t *au8_receive_data, uint16_t *pu16_receive_data_id, uint8_t u8_max_nof_elements);
 
   virtual int observe();
   virtual int loopback();

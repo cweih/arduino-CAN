@@ -258,7 +258,7 @@ int MCP2515Class::parsePacket()
   return _rxDlc;
 }
 
-uint8_t MCP2515Class::pollCANData(uint8_t *au8_receive_data, uint8_t u8_max_nof_elements)
+uint8_t MCP2515Class::pollCANData(uint8_t *au8_receive_data, uint16_t *pu16_receive_data_id, uint8_t u8_max_nof_elements)
 {
   uint8_t i = 0;
   if (readRegister(REG_CANINTF) == 0) {
@@ -266,7 +266,7 @@ uint8_t MCP2515Class::pollCANData(uint8_t *au8_receive_data, uint8_t u8_max_nof_
   }
 
   parsePacket();
-
+  (*pu16_receive_data_id) = (uint16_t)packetId();
   while (available() && (i < u8_max_nof_elements)) {
     au8_receive_data[i] = read();
     i++;
